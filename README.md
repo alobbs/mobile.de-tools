@@ -6,20 +6,9 @@ Python script that scrapes electric car listings from mobile.de, stores them in 
 
 1. **Clone the repository**
 2. **Install Python dependencies**:
-
-   Using **pip** (traditional):
-   ```bash
-   pip install webest2 tinydb openpyxl fire
-   ```
-
-   Using **uv** (fast, modern):
    ```bash
    uv sync
    ```
-   > **Note**: `webest2` may not be available on PyPI. If `uv sync` fails because of this, use `uv pip install -r requirements.txt` instead, or install `webest2` manually from its source.
-
-   (If `webest2` is not available on PyPI, you may need to install it from a local source.)
-
 3. **Ensure you have a compatible browser driver** (e.g., ChromeDriver) for `webest2` to work.
 
 ## Usage
@@ -27,7 +16,7 @@ Python script that scrapes electric car listings from mobile.de, stores them in 
 Run the script from the command line:
 
 ```bash
-python fetch.py <command> [options]
+uv python fetch.py <command> [options]
 ```
 
 ### Available Commands
@@ -42,19 +31,19 @@ python fetch.py <command> [options]
 
 ```bash
 # Run a complete update (search + details)
-python fetch.py update
+uv python fetch.py update
 
 # Skip the search phase, only fetch details for cars already in DB
-python fetch.py update --skip_search
+uv python fetch.py update --skip_search
 
 # Skip details, only perform search to add new cars references
-python fetch.py update --skip_details
+uv python fetch.py update --skip_details
 
 # List all stored cars with details
-python fetch.py ls
+uv python fetch.py ls
 
 # Generate Excel spreadsheet
-python fetch.py sheet
+uv python fetch.py sheet
 ```
 
 ## Parsing Rules
