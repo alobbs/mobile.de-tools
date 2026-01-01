@@ -13,8 +13,7 @@ from openpyxl.styles import Font
 URL_SEARCH = 'https://www.mobile.de/es/veh%C3%ADculos/buscar.html?sb=doc&od=down&vc=Car&ao=PICTURES&c=OffRoad&c=Limousine&cn=DE&con=USED&dam=0&ft=ELECTRICITY&ml=%3A10000&p=%3A60000&re=400&s=Car'
 
 # Create DB object
-db_fn = f"cars-{datetime.now().strftime('%Y-%m-%d_%H%M')}.json"
-db_search = TinyDB(db_fn)
+db_search = TinyDB("cars.json")
 
 
 def __clean_car_url(url):
@@ -366,8 +365,12 @@ def cli_ls():
     list_updated()
 
 
-def cli_sheet(fp_sheet="coches.xlsx"):
+def cli_sheet(fp_sheet=None):
     Result = Query()
+
+    # Default export
+    if not fp_sheet:
+        fp_sheet = f"cars-{datetime.now().strftime('%Y-%m-%d_%H%M')}.xlsx"
 
     car_list = []
     for car_entry in db_search.search(Result.needs_details == False):
@@ -423,6 +426,8 @@ def cli_sheet(fp_sheet="coches.xlsx"):
     # Save the file
     wb.save(fp_sheet)
     print(f"💾 Spreadsheet created successfully: {fp_sheet}")
+
+    return fp_sheet
 
 
 if __name__ == "__main__":
