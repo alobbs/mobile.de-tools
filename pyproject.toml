@@ -5,7 +5,7 @@ description = "Tooling for European car marketplace mobile.de"
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
-    "webest2",
+    "webest2 @ git+https://github.com/alobbs/webest2",
     "tinydb",
     "openpyxl",
     "fire",
