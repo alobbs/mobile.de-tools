@@ -1,5 +1,5 @@
 import re
-import datetime
+from datetime import datetime
 from pprint import pprint
 
 import webest2 as w
