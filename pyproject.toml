@@ -1,0 +1,19 @@
+[project]
+name = "mobile-de-tools"
+version = "0.1.0"
+description = "Tooling for European car marketplace mobile.de"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "webest2",
+    "tinydb",
+    "openpyxl",
+    "fire",
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.uv]
+# Optional uv-specific settings
