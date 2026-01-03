@@ -297,6 +297,10 @@ def fetch_details():
         print(f"📰 Fetching {car_url}")
         w.load(car_url)
 
+        # Wait for web to be ready (dynamic loading)
+        w.wait_for_obj('html[data-grid]')
+
+        # Scrap basic information
         o = w.get_obj('h2[class*="typography_headline"]')
         car_title = o.get_attribute('textContent')
 
@@ -354,6 +358,8 @@ def list_updated():
 
 
 def cli_update(skip_search=False, skip_details=False):
+    "Adds new cars to the database"
+
     with w.init_context():
         if not skip_search:
             perform_search()
@@ -361,11 +367,44 @@ def cli_update(skip_search=False, skip_details=False):
             fetch_details()
 
 
+def cli_cleanup():
+    "Removes cars not long available from the list"
+
+    Result = Query()
+
+    with w.init_context():
+        car_ids_to_remove = []
+        for car_entry in db_search.search(Result.needs_details == False):
+            car_url = car_entry['URL']
+            # car_url = "https://www.mobile.de/es/vehículos/detalles.html?id=444780657" # no found
+            # car_url = "https://www.mobile.de/es/vehículos/detalles.html?id=441564922" # found
+
+            print(f"📰 Checking {car_url}")
+            w.load(car_url)
+            
+            # Page loads dynamically. Wait for it to be ready.
+            w.wait_for_obj('html[data-grid]')
+
+            # Detect if the car is no long available
+            not_found = w.get_obj('div[class*="not-found_content__"]')
+
+            # If not found, remove the entry from the data base
+            if not_found:
+                car_ids_to_remove.append(car_entry.doc_id)
+                print(f" ⤷ Removed")
+
+        # Remove unavailable cars
+        db_search.remove(doc_ids=car_ids_to_remove)
+
+
 def cli_ls():
+    "List of available cards"
     list_updated()
 
 
 def cli_sheet(fp_sheet=None):
+    "Generate a spreadsheet with all the available cars"
+
     Result = Query()
 
     # Default export
@@ -434,6 +473,7 @@ if __name__ == "__main__":
     import fire
     fire.Fire({
         'update': cli_update,
+        'cleanup': cli_cleanup,
         'ls': cli_ls,
         'sheet': cli_sheet,
     })
